@@ -247,28 +247,40 @@
   </style>
 </head>
 <body>
-  <h1>Stock Watchlist</h1>
-  <p class="hint">Enter a single ticker symbol. This sends exactly ONE call to the Massive API to fetch the latest price, then adds it to your watchlist.</p>
+  <div class="container">
+    <div class="header">
+      <h1>📊 Stock Watchlist</h1>
+      <p class="hint">Track your favorite stocks in real-time. Enter a ticker symbol to fetch the latest price and add it to your personal watchlist.</p>
+    </div>
 
-  <form id="stock-form">
-    <label for="symbol">Ticker symbol</label>
-    <input type="text" id="symbol" name="symbol" placeholder="AAPL" required>
-    <button type="submit">Add to watchlist</button>
-  </form>
+    <div class="card">
+      <form id="stock-form">
+        <div class="form-group">
+          <label for="symbol">Ticker Symbol</label>
+          <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL, MSFT, TSLA" required>
+        </div>
+        <button type="submit">✨ Add to Watchlist</button>
+      </form>
 
-  <div id="result"></div>
+      <div id="result"></div>
+    </div>
 
-  <table id="watchlist-table">
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Email</th>
-        <th>Latest price</th>
-        <th>Updated</th>
-      </tr>
-    </thead>
-    <tbody id="watchlist-body"></tbody>
-  </table>
+    <div class="table-container">
+      <div class="table-title">Your Watchlist</div>
+      <table id="watchlist-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Email</th>
+            <th>Latest Price</th>
+            <th>Last Updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="watchlist-body"></tbody>
+      </table>
+    </div>
+  </div>
 
   <script>
     const form = document.getElementById("stock-form");
