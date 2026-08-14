@@ -4,16 +4,260 @@
   <meta charset="UTF-8">
   <title>Massive Stock Watchlist</title>
   <style>
-    body { font-family: -apple-system, Arial, sans-serif; max-width: 560px; margin: 60px auto; color: #222; }
-    h1 { font-size: 20px; }
-    label { display: block; margin-top: 16px; font-weight: 600; }
-    input[type="text"] { width: 100%; padding: 8px; margin-top: 6px; box-sizing: border-box; }
-    button { margin-top: 16px; padding: 8px 16px; cursor: pointer; }
-    #result { margin-top: 20px; white-space: pre-wrap; background: #f6f6f6; padding: 12px; border-radius: 6px; min-height: 20px; }
-    .hint { color: #777; font-size: 13px; margin-top: 4px; }
-    table { width: 100%; margin-top: 24px; border-collapse: collapse; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
-    th { font-size: 13px; color: #555; text-transform: uppercase; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #2d3748;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hint {
+      color: #718096;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: #4a5568;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input[type="text"]::placeholder {
+      color: #a0aec0;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #result {
+      margin-top: 24px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    #result.show {
+      display: block;
+    }
+
+    #result.success {
+      background: #c6f6d5;
+      color: #22543d;
+      border-left: 4px solid #38a169;
+    }
+
+    #result.error {
+      background: #fed7d7;
+      color: #742a2a;
+      border-left: 4px solid #e53e3e;
+    }
+
+    #result.loading {
+      background: #bee3f8;
+      color: #2c5282;
+      border-left: 4px solid #3182ce;
+    }
+
+    .table-container {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+    }
+
+    .table-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    th {
+      text-align: left;
+      padding: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 10px 0 0;
+    }
+
+    tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f7fafc;
+      transform: scale(1.01);
+    }
+
+    td {
+      text-align: left;
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      color: #4a5568;
+    }
+
+    tbody tr:last-child td:first-child {
+      border-radius: 0 0 0 10px;
+    }
+
+    tbody tr:last-child td:last-child {
+      border-radius: 0 0 10px 0;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #a0aec0;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 16px;
+      }
+
+      .header, .card, .table-container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 12px 8px;
+      }
+    }
   </style>
 </head>
 <body>
